@@ -174,6 +174,7 @@ const load = url => {
   let u; try { u = new URL(url); } catch { u = null; }
   if (!u || u.protocol !== 'https:') { err.textContent = 'Please paste a full https:// link.'; return; }
   err.textContent = '';
+  if (window.__LINKOUT) { const a = document.createElement('a'); a.href = u.href; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Open this tour in a new tab'; a.className = 'open-tour'; holder.replaceChildren(a); return; }
   const f = document.createElement('iframe');
   f.src = u.href; f.title = '360° virtual tour'; f.loading = 'lazy';
   f.allow = 'fullscreen; xr-spatial-tracking; gyroscope; accelerometer';
