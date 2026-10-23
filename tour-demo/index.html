@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scroll Tour Demo</title>
+<meta name="description" content="A scroll-driven 3D walkthrough with a real 360° tour embed.">
+<style>
+  :root { --bg:#14100d; --ink:#f4ece1; --muted:#c9bba8; --accent:#ffb36b; --card:rgba(20,16,13,.72); }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  #tour { height: 700vh; position: relative; }
+  .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+  #scene { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .shade { position:absolute; inset:0; pointer-events:none; background:
+    linear-gradient(180deg, rgba(10,8,6,.55), transparent 22%, transparent 62%, rgba(10,8,6,.7)); }
+  header { position:absolute; top:0; left:0; right:0; padding:20px 24px; display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; }
+  .brand { font-weight:650; letter-spacing:.04em; }
+  nav { display:flex; gap:8px; flex-wrap:wrap; }
+  nav button { font:inherit; font-size:14px; color:var(--ink); background:var(--card); border:1px solid rgba(255,255,255,.18); border-radius:999px; padding:8px 16px; cursor:pointer; backdrop-filter: blur(8px); }
+  nav button:hover { border-color:var(--accent); }
+  nav button[aria-current="true"] { background:var(--accent); color:#1a120a; border-color:var(--accent); }
+  button:focus-visible, input:focus-visible, a:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+  .caption { position:absolute; left:24px; bottom:44px; max-width:min(440px, calc(100% - 48px)); }
+  .caption h1 { margin:0 0 6px; font-size:clamp(34px, 6vw, 64px); line-height:1.05; letter-spacing:-.02em; font-weight:650; }
+  .caption p { margin:0; color:var(--muted); font-size:17px; }
+  .rail { position:absolute; left:0; right:0; bottom:0; height:4px; background:rgba(255,255,255,.12); }
+  #bar { height:100%; background:var(--accent); transform-origin:left; transform:scaleX(0); }
+  #real { padding: 96px 24px 120px; max-width: 1040px; margin: 0 auto; }
+  #real h2 { font-size:clamp(28px,4vw,44px); line-height:1.1; margin:0 0 12px; letter-spacing:-.01em; }
+  #real p.lead { color:var(--muted); max-width:56ch; margin:0 0 28px; }
+  #embed-form { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  #embed-url { flex:1 1 280px; min-width:0; font:inherit; color:var(--ink); background:#1f1913; border:1px solid rgba(255,255,255,.2); border-radius:10px; padding:12px 14px; }
+  #embed-form button { font:inherit; font-weight:600; color:#1a120a; background:var(--accent); border:0; border-radius:10px; padding:12px 20px; cursor:pointer; }
+  #embed-err { min-height:1.4em; color:#ff9a8a; font-size:14px; margin:0 0 14px; }
+  #embed-holder { aspect-ratio:16/9; width:100%; border-radius:14px; overflow:hidden; background:#1f1913; border:1px dashed rgba(255,255,255,.25); display:grid; place-items:center; text-align:center; color:var(--muted); padding:24px; }
+  #embed-holder iframe { width:100%; height:100%; border:0; display:block; }
+  @media (max-width:640px) { header { padding:14px 16px; } .caption { left:16px; bottom:32px; } #real { padding:64px 16px 80px; } }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto !important; } }
+</style>
+</head>
+<body>
+<section id="tour" aria-label="Guided 3D tour">
+  <div class="stage">
+    <canvas id="scene" role="img" aria-label="3D walkthrough of four rooms: living room, kitchen, bedroom and studio"></canvas>
+    <div class="shade"></div>
+    <header>
+      <span class="brand">Scroll Tour Demo</span>
+      <nav aria-label="Rooms">
+        <button type="button" data-room="0">Living room</button>
+        <button type="button" data-room="1">Kitchen</button>
+        <button type="button" data-room="2">Bedroom</button>
+        <button type="button" data-room="3">Studio</button>
+      </nav>
+    </header>
+    <div class="caption" aria-live="polite">
+      <h1 id="room-title">Living room</h1>
+      <p id="room-text"></p>
+    </div>
+    <div class="rail" aria-hidden="true"><div id="bar"></div></div>
+  </div>
+</section>
+<section id="real">
+  <h2>Now step inside the real thing</h2>
+  <p class="lead">Paste the share link of a 360° tour (Matterport, Kuula, 3DVista, or your own) to embed it in this page. This is the section you would reuse on a client's site.</p>
+  <form id="embed-form">
+    <input id="embed-url" type="url" inputmode="url" placeholder="https://…" aria-label="360 tour link" required>
+    <button type="submit">Load tour</button>
+  </form>
+  <p id="embed-err" role="alert"></p>
+  <div id="embed-holder">Your 360° tour appears here</div>
+</section>
+<script src="tour.js"></script>
+</body>
+</html>
